@@ -22,9 +22,10 @@ template <typename C> struct My_Trait{ typedef typename C::Pointer_T type;};
 class Filewrapper{
 
     istream* the_file;
+public:
     template <typename T> using pointer_t = typename My_Trait<T>::type;
 
-public:
+
     Filewrapper(string filename){ 
         filebuf* fb = new filebuf();
         the_file = new ifstream();//filename);
@@ -64,12 +65,12 @@ public:
     template <>
     Filewrapper::pointer_t<V_T<Filewrapper> > Filewrapper::Construct<V_T<Filewrapper>> (string filename_){
         pointer_t<V_T<Filewrapper> > return_value { Filewrapper(filename_) };
-        return return_value;
+        return std::move( return_value );
     }
     template <>
     Filewrapper::pointer_t<V_T<Filewrapper> > Filewrapper::ConstructIS<V_T<Filewrapper>> (istream* is_){
         pointer_t<V_T<Filewrapper> > return_value { Filewrapper(is_) };
-        return return_value;
+        return std::move(return_value);
     }
 
 class Filewrapper_Maker{
@@ -79,10 +80,10 @@ class Filewrapper_Maker{
 public:
     static Filewrapper Make(string filename_){
         Filewrapper ret_val (filename_);
-        return ret_val;}
+        return std::move( ret_val );}
     static Filewrapper Make(istream* src_str){
         Filewrapper ret_val (src_str);
-        return ret_val;
+        return std::move(ret_val);
     }
 
     static shared_ptr<Filewrapper> Make_P (string filename_){
@@ -124,7 +125,12 @@ class Filewrapper_Test : public ::testing::Test{
     }
 
 protected:
+
+#ifndef _MSC_VER
     string path = "/tmp/sample.file.txt";
+#else
+    string path = "c:\\temp\\sample.file.txt";
+#endif
     vector<int64_t> values;
 
 };
@@ -355,6 +361,7 @@ int main(int argc, char *argv[])
     int result =  RUN_ALL_TESTS();
     
 //    bool success = ::testing::Run_All_Tests();
-    
+
+    system("pause");
     return 0;
 }
