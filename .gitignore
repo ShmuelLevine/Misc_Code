@@ -1,0 +1,4 @@
+File.Wrapper.Test
+flycheck_*.
+*/flycheck*
+*.o

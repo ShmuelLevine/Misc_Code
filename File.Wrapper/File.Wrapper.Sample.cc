@@ -8,6 +8,7 @@
 #include <random>
 
 #include "gtest/gtest.h"
+#include <boost/log/trivial.hpp>
 
 using namespace std;
 
@@ -139,9 +140,13 @@ TEST_F(Filewrapper_Test, T001_File_Wrapper_By_Value_String_Constructor){
     
     Filewrapper my_wrapper (path);
     ASSERT_TRUE(my_wrapper.Is_Valid());
+    int64_t value;
 
-    for (int i = 0; i < 20; ++i)
-        EXPECT_EQ(values[i], my_wrapper.Get_Value());
+    for (int i = 0; i < 20; ++i){
+        value = my_wrapper.Get_Value();
+        EXPECT_EQ(values[i], value);
+        cout << "The value retrieved from the file was:  " << value << endl;
+    }
    
 }
 
